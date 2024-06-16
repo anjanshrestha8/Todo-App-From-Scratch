@@ -1,9 +1,10 @@
+/* eslint-disable react/prop-types */
 import "../assets/css/components/card.css";
-function Card() {
+function Card(props) {
   return (
     <>
       <div className="card-wrapper">
-        <h1>Go to gym</h1>
+        <h1>{props.task || "task"}</h1>
       </div>
     </>
   );

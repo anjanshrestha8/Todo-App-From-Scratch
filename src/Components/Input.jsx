@@ -7,6 +7,7 @@ function Input(props) {
         <input
           type="text"
           placeholder={props.placeholder || "  Enter something.........."}
+          onChange={props.onChange}
         />
       </div>
     </>

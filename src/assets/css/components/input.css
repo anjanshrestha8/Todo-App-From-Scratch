@@ -1,0 +1,10 @@
+.input-wrapper > input {
+  margin-top: 2rem;
+  width: calc(100% - 26px);
+  height: 2rem;
+  outline: none;
+  padding: 6px 11px;
+  font-size: 1.5rem;
+  border: 2px solid grey;
+  border-radius: 4px;
+}

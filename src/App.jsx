@@ -18,16 +18,15 @@ function App() {
     },
   ]);
 
+  const [toggleSubmit, setToggleSubmit] = useState(true);
+  const [editingIndex, setEditingIndex] = useState(0);
+
   const [newTask, setNewTask] = useState("");
 
   // Functions
 
-  const handleChange = (event) => {
-    setNewTask(event.target.value);
-  };
-
   const handleClick = () => {
-    let modifiedArray = [...task, { work: newTask }];
+    let modifiedArray = [...task, { work: newTask, isComplete: false }];
     setTask(modifiedArray);
   };
 
@@ -36,6 +35,16 @@ function App() {
       return f_index != index;
     });
     setTask(remainingArray);
+  };
+
+  const handleEdit = (index) => {
+    const editArray = task.find((item, idx) => {
+      return idx === index;
+    });
+    setToggleSubmit(!toggleSubmit);
+    console.log(editArray.work);
+    setNewTask(editArray.work);
+    setEditingIndex(index);
   };
 
   return (
@@ -47,15 +56,24 @@ function App() {
             <Input
               placeholder="K K kam garna parne ho lekha..."
               onChange={(event) => {
-                handleChange(event);
+                setNewTask(event.target.value);
               }}
             />
-            <Button
-              name="Add"
-              type="submit"
-              className="btn btn-add"
-              onClick={handleClick}
-            />
+            {toggleSubmit ? (
+              <Button
+                name="Add"
+                type="submit"
+                className="btn btn-add"
+                onClick={handleClick}
+              />
+            ) : (
+              <Button
+                name="Edit"
+                type="submit"
+                className="btn btn-add"
+                onClick={handleClick}
+              />
+            )}
           </div>
         </section>
         <section className="display-wrapper">
@@ -70,7 +88,9 @@ function App() {
                 <Button
                   className="btn btn-edit"
                   name="Edit"
-                  // onClick={handleEdit}
+                  onClick={() => {
+                    handleEdit(index);
+                  }}
                 />
                 <Button
                   className="btn btn-delete"

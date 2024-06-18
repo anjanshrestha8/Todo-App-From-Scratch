@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "./Components/Button";
 import Card from "./Components/Card";
 import Checkbox from "./Components/Checkbox";
@@ -9,25 +9,60 @@ import "./assets/css/components/app.css";
 function App() {
   const [task, setTask] = useState([
     {
-      work: "Goto gym",
-      isComplete: true,
-    },
-    {
-      work: "Goto home",
+      title: "",
       isComplete: false,
     },
   ]);
-
   const [toggleSubmit, setToggleSubmit] = useState(true);
   const [editingIndex, setEditingIndex] = useState(0);
-
   const [newTask, setNewTask] = useState("");
 
   // Functions
 
+  useEffect(() => {
+    fetch("http://localhost:8000/")
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        setTask(data);
+      });
+  }, []);
+
   const handleClick = () => {
-    let modifiedArray = [...task, { work: newTask, isComplete: false }];
-    setTask(modifiedArray);
+    if (newTask === "") {
+      return;
+    } else if (!toggleSubmit) {
+      let firstArr = task.slice(0, editingIndex);
+      let lastArr = task.slice(editingIndex + 1);
+      let modifiedArray = [
+        ...firstArr,
+        { work: newTask, isComplete: false },
+        ...lastArr,
+      ];
+      setTask(modifiedArray);
+      setNewTask("");
+      setToggleSubmit(!toggleSubmit);
+    } else {
+      let modifiedArray = [...task, { title: newTask, isComplete: false }];
+      setTask(modifiedArray);
+      setNewTask("");
+
+      fetch("http://localhost:8000/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(modifiedArray),
+      })
+        .then((response) => {
+          return response.json();
+        })
+        .then((data) => {
+          console.log(data);
+        });
+    }
   };
 
   const handleDelete = (index) => {
@@ -58,6 +93,7 @@ function App() {
               onChange={(event) => {
                 setNewTask(event.target.value);
               }}
+              value={newTask}
             />
             {toggleSubmit ? (
               <Button
@@ -83,7 +119,7 @@ function App() {
               <div className="display-section" key={index}>
                 <Checkbox />
                 {/* <Checkbox isComplete={item.isComplete} /> */}
-                <Card task={item.work} />
+                <Card task={item.title} />
 
                 <Button
                   className="btn btn-edit"

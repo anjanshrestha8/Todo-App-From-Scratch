@@ -27,7 +27,7 @@
 
 .display-section {
   border-radius: 4px;
-  margin-top: 1rem;
+
   padding: 0 11px;
   display: grid;
   grid-template-columns: 0.1fr 1fr 0.5fr 0.5fr;
